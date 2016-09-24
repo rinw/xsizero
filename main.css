@@ -1,0 +1,12 @@
+.gametable {
+	border: 1px solid;
+}
+
+.gametable tr>td {
+
+	width: 100px;
+	height: 100px;
+	text-align: center;
+	border: 1px solid;
+	font-size: 72px;
+}
