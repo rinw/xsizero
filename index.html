@@ -6,22 +6,38 @@
 		<script type="text/javascript" src="main.js"></script>
 	</head>
 	<body>
-		<table class=gametable>
-			<tr>	<td id=cell_11 x=1 y=1></td>
-					<td id=cell_21 x=2 y=1></td>
-					<td id=cell_31 x=3 y=1></td>
+		<table width=100% height=100%>
+			<tr>
+				<td align=center valign=center>
+					<table>
+						<tr>
+							<td width=220>
+							</td>
+							<td>
+								<table class=gametable></table>
+							</td>
+							<td width=220 height=1 align=left valign=top style="padding-left: 20px">
+								
+								<table height=100% width="150">
+									<tr>
+										<td valign=top>
+											<p id=nextmovemsg style="display: inline"><span id=nextmove></span>'s turn</p>
+											<p id=msg></p>
+										</td>
+									</tr>
+									<tr>
+										<td valign=bottom>
+											<button id=restart style="display: none">Restart</button>
+										</td>
+									</tr>
+								</table>
+
+							</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
-			<tr>	<td id=cell_12 x=1 y=2></td>
-					<td id=cell_22 x=2 y=2></td>
-					<td id=cell_32 x=3 y=2></td>
-			</tr>	
-			<tr>	<td id=cell_13 x=1 y=3></td>
-					<td id=cell_23 x=2 y=3></td>
-					<td id=cell_33 x=3 y=3></td>
-			</tr>	
 		</table>
-		<div id=msg ></div>
-		<button id=restart>Restart</button>
 	</body>
 </html>
 

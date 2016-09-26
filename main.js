@@ -1,10 +1,25 @@
-var nextmove = 'X'
+var nextmove
 var n = 3
+
+var create_board = function () {
+	var s = ''
+	for (var j = 1; j <= n; j++) {
+		s = s + '<tr>'
+		for (var i = 1; i <= n; i++) {
+			s = s + '<td id="cell_' + i + j + '"></td>'
+		}
+		s = s + '</tr>'
+	}
+	$('.gametable').html(s)
+}
 
 var resetgame = function (){
 	$('.gametable tr>td').html('')
 	$('#msg').html('')
+	$('#restart').hide()
 	nextmove = 'X'
+	$('#nextmove').html(nextmove)
+	$('#nextmovemsg').show()
 }
 
 // verificam daca s-a castigat pe orizontala sau pe verticala
@@ -29,9 +44,7 @@ var verifyline = function (direction) {
 			}
 			else {
 				if (i == n-1) { // ultima comparatie
-					$('#msg').html('Ai $$$')
-					alert(i + '' + j)
-					return
+					return j
 				}
 			}	
 		} 
@@ -58,17 +71,27 @@ var verifydiagonal = function(direction) {
 		}
 		else {
 			if (i == n-1) { // ultima comparatie
-				$('#msg').html('Ai $$$')
-				
-				return
+				return true
 			}
 		}	
 
 	}
 }
 
+var verify_draw = function() {
+	for (var j = 1; j <= n; j++) 
+		for (var i = 1; i <= n; i++) {
+			if ($('#cell_' + i + j).html() == '') 
+				return false 
+		}
+	return true
+}
+
 $(function() {
 	
+	create_board()
+	resetgame()
+
 	$('#restart').click(function() {
 		resetgame()
 	})
@@ -79,12 +102,27 @@ $(function() {
 
 		$(this).html(nextmove)	
 		nextmove = (nextmove=='X'?'0':'X')
+		$('#nextmove').html(nextmove)
 		$(this).html()
 		
-		verifyline('horizontal')
-		verifyline('vertical')
+		if (
+			verifyline('horizontal') || 
+			verifyline('vertical') ||
+			verifydiagonal('1st') ||
+			verifydiagonal('2nd')
+			) 
+			$('#msg').html((nextmove == 'X'? '0':'X') + ' WINS!')		
 
-		verifydiagonal('1st')
-		verifydiagonal('2nd')		
+		else if (verify_draw())
+			$('#msg').html('Remiza')
+
+		if ($('#msg').html() != '') {
+			$('#restart').show()
+			$('#nextmovemsg').hide()
+		}
+		else {
+			$('#restart').hide()
+			$('#nextmovemsg').show()
+		}
 	})
 })
