@@ -1,11 +1,17 @@
-var nextmove
 var n = 3
+var nextmove // '0' or 'X'
 
-var create_board = function () {
+// utility function to return the other move 
+var othermove = function(move) {
+	return move == 'X' ? '0' : 'X'
+}
+
+// create all the cells of the board table
+var create_board = function() {
 	var s = ''
-	for (var j = 1; j <= n; j++) {
+	for (var j = 1; j <= n; j++) { // row iteration
 		s = s + '<tr>'
-		for (var i = 1; i <= n; i++) {
+		for (var i = 1; i <= n; i++) { // column iteration
 			s = s + '<td id="cell_' + i + j + '"></td>'
 		}
 		s = s + '</tr>'
@@ -13,17 +19,17 @@ var create_board = function () {
 	$('.gametable').html(s)
 }
 
-var resetgame = function (){
-	$('.gametable tr>td').html('')
-	$('#msg').html('')
-	$('#restart').hide()
-	nextmove = 'X'
-	$('#nextmove').html(nextmove)
-	$('#nextmovemsg').show()
+var resetgame = function() {
+	$('.gametable tr>td').html('') // empty all the cells of the game board
+	$('#msg').html('') // empty the message element
+	$('#restart').hide() // hide the restart button
+	nextmove = 'X' // initialize the value of nextmove 
+	$('#nextmove').html(nextmove) // show the next move
+	$('#nextmovemsg').show() // unhide the "who's turn is" message
 }
 
 // verificam daca s-a castigat pe orizontala sau pe verticala
-var verifyline = function (direction) {
+var verifyline = function (direction) { 
 	for (var j = 1; j <= n; j++) {
 		for(var i = 1; i < n; i++) {
 			var v1
@@ -43,8 +49,9 @@ var verifyline = function (direction) {
 				break
 			}
 			else {
-				if (i == n-1) { // ultima comparatie
-					return j
+				if (i == n-1) { // last comparison
+					// return the winning row/column
+					return [direction, j] 
 				}
 			}	
 		} 
@@ -71,7 +78,7 @@ var verifydiagonal = function(direction) {
 		}
 		else {
 			if (i == n-1) { // ultima comparatie
-				return true
+				return [direction]
 			}
 		}	
 
@@ -84,38 +91,76 @@ var verify_draw = function() {
 			if ($('#cell_' + i + j).html() == '') 
 				return false 
 		}
-	return true
+	return ['draw']
 }
 
+// returns [winning_way, row/column] | false
+var verify_game = function() {
+	return  verifyline('horizontal') ||
+			verifyline('vertical') ||
+			verifydiagonal('1st') ||
+			verifydiagonal('2nd') ||
+			verify_draw()
+}
+
+// $(function) runs a function after the document (html) is loaded 
+// and all its elements are available.
 $(function() {
 	
 	create_board()
 	resetgame()
 
+	// add a click handler to the restart button
 	$('#restart').click(function() {
 		resetgame()
 	})
 	
+	// add click handler to each board cell
 	$('.gametable tr>td').click(function() {
-		if($(this).html() != '') return
-		if($('#msg').html() != '') return		
-
-		$(this).html(nextmove)	
-		nextmove = (nextmove=='X'?'0':'X')
-		$('#nextmove').html(nextmove)
-		$(this).html()
 		
-		if (
-			verifyline('horizontal') || 
-			verifyline('vertical') ||
-			verifydiagonal('1st') ||
-			verifydiagonal('2nd')
-			) 
-			$('#msg').html((nextmove == 'X'? '0':'X') + ' WINS!')		
+		// fast exit paths
+		if($(this).html() != '') return // no clicking on non-empty cells
+		if($('#msg').html() != '') return // no clicking if there's a message
 
-		else if (verify_draw())
-			$('#msg').html('Remiza')
+		$(this).html(nextmove) // puts an 'X' or '0' on the cell's html	
+		nextmove = othermove(nextmove) // set nextmove to the other move
+		$('#nextmove').html(nextmove) // show the next move in the UI
+		
+		var r = verify_game()
+		if (r) {
+			var winning_way = r[0]
+			var winning_line = r[1]
+			if (winning_way == 'draw') {
+				$('#msg').html('Draw')
+			} 
+			else {
+				if (winning_way == 'horizontal') {
+					$('.winningline')
+						.show()
+						.css({'top': (winning_line*100-50) +'px'})
+				} 
 
+				else if (winning_way == 'vertical') {
+					$('.winningline')
+						.show()
+						.css({
+							'left': (winning_line*100-50) +'px',
+							'-ms-transform': 'rotate(90deg)', /* IE 9 */
+   							'-webkit-transform': 'rotate(90deg)', /* Safari */
+							'transform': 'rotate(90deg)'
+						})
+				}
+				else if (winning_way == '1st') {
+
+				}
+				else if (winning_way == '2nd') {
+
+				}
+				$('#msg').html(othermove(nextmove) + ' WINS!')
+			}
+		}
+
+		// update the UI based on game state which might have just changed
 		if ($('#msg').html() != '') {
 			$('#restart').show()
 			$('#nextmovemsg').hide()

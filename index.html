@@ -14,14 +14,23 @@
 							<td width=220>
 							</td>
 							<td>
-								<table class=gametable></table>
+								<div style="position: relative">
+									<div class=overlay>
+										<div class=winningline></div>
+										<!-- TODO: generate these from javascript for N rows/cols -->
+										<div class=boardline style="left: 100px; top: 0px; width: 1px; height: 300px"></div>
+										<div class=boardline style="left: 200px; top: 0px; width: 1px; height: 300px"></div>
+										<div class=boardline style="left: 0px; top: 100px; width: 300px; height: 1px"></div>
+										<div class=boardline style="left: 0px; top: 200px; width: 300px; height: 1px"></div>
+									</div>
+									<table class=gametable></table>
+								</div>
 							</td>
-							<td width=220 height=1 align=left valign=top style="padding-left: 20px">
-								
+							<td width=220 height=1 align=left valign=top style="padding-left: 20px">							
 								<table height=100% width="150">
 									<tr>
-										<td valign=top>
-											<p id=nextmovemsg style="display: inline"><span id=nextmove></span>'s turn</p>
+										<td class=msg_font valign=top>
+											<p id=nextmovemsg style="display: none"><span id=nextmove></span>'s turn</p>
 											<p id=msg></p>
 										</td>
 									</tr>
