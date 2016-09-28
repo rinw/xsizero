@@ -1,6 +1,6 @@
 var n = 3
 var nextmove // '0' or 'X'
-
+var score={'X': 0, '0': 0}
 // utility function to return the other move 
 var othermove = function(move) {
 	return move == 'X' ? '0' : 'X'
@@ -26,6 +26,7 @@ var resetgame = function() {
 	nextmove = 'X' // initialize the value of nextmove 
 	$('#nextmove').html(nextmove) // show the next move
 	$('#nextmovemsg').show() // unhide the "who's turn is" message
+	$('.winningline').hide()
 }
 
 // verificam daca s-a castigat pe orizontala sau pe verticala
@@ -134,26 +135,60 @@ $(function() {
 				$('#msg').html('Draw')
 			} 
 			else {
+				var winmove = othermove(nextmove)
+				score[winmove]++
+				$('#score_' + winmove).html(score[winmove])
+
 				if (winning_way == 'horizontal') {
 					$('.winningline')
 						.show()
-						.css({'top': (winning_line*100-50) +'px'})
+						.css({
+							'top': (winning_line*100-50) +'px', 
+							'left': '0px',
+							'width': 300 + 'px',
+							'-ms-transform': 'rotate(0deg)', /* IE 9 */
+   							'-webkit-transform': 'rotate(0deg)', /* Safari */
+							'transform': 'rotate(0deg)'								
+						})
+
 				} 
 
 				else if (winning_way == 'vertical') {
 					$('.winningline')
 						.show()
 						.css({
-							'left': (winning_line*100-50) +'px',
+							'top': (150) +'px',
+							'left': (winning_line*100-200) +'px',
+							'width': 300 + 'px',
 							'-ms-transform': 'rotate(90deg)', /* IE 9 */
    							'-webkit-transform': 'rotate(90deg)', /* Safari */
 							'transform': 'rotate(90deg)'
 						})
 				}
 				else if (winning_way == '1st') {
-
+					$('.winningline')
+						.show()
+						.css({
+							'top': '150px',
+							'left': '-55px',
+							'width': (300*Math.sqrt(2)) + 'px',
+							'-ms-transform': 'rotate(45deg)', /* IE 9 */
+   							'-webkit-transform': 'rotate(45deg)', /* Safari */
+							'transform': 'rotate(45deg)'								
+						})
 				}
 				else if (winning_way == '2nd') {
+					$('.winningline')
+						.show()
+						.css({
+							'top': '150px',
+							'left': '-65px',
+							'width': (300*Math.sqrt(2)) + 'px',
+							'-ms-transform': 'rotate(-45deg)', /* IE 9 */
+   							'-webkit-transform': 'rotate(-45deg)', /* Safari */
+							'transform': 'rotate(-45deg)'								
+						})
+
 
 				}
 				$('#msg').html(othermove(nextmove) + ' WINS!')
